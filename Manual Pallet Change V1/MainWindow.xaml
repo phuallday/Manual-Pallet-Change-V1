@@ -1,0 +1,473 @@
+﻿<mah:MetroWindow xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 x:Name="metroWindow"
+                 x:Class="s7dotnet.MainWindow"
+                 Title="Pallet Change Manual Control"
+                 Width="714.333"
+                 Height="458"
+                 WindowStartupLocation="CenterScreen"
+                 mc:Ignorable="d"
+                 Loaded="metroWindow_Loaded"
+                 WindowStyle="ToolWindow"
+                 ResizeMode="NoResize"
+                 Icon="transfer.png">
+    <Window.Resources>
+        <ResourceDictionary>
+            <Ellipse x:Key="AppThemeMenuIcon"
+                     Width="16"
+                     Height="16"
+                     x:Shared="False"
+                     Fill="{Binding ColorBrush, Mode=OneWay}"
+                     Stroke="{Binding BorderColorBrush, Mode=OneWay}"
+                     StrokeThickness="1" />
+            <Ellipse x:Key="AccentMenuIcon"
+                     Width="16"
+                     Height="16"
+                     x:Shared="False"
+                     Fill="{Binding ColorBrush, Mode=OneWay}" />
+
+            <Style x:Key="AppThemeMenuItemStyle"
+                   BasedOn="{StaticResource MahApps.Styles.MenuItem}"
+                   TargetType="{x:Type MenuItem}">
+                <Setter Property="Command"
+                        Value="{Binding ChangeAccentCommand}" />
+                <Setter Property="Header"
+                        Value="{Binding Name, Mode=OneWay}" />
+                <Setter Property="Icon"
+                        Value="{StaticResource AppThemeMenuIcon}" />
+            </Style>
+
+            <Style x:Key="AccentColorMenuItemStyle"
+                   BasedOn="{StaticResource MahApps.Styles.MenuItem}"
+                   TargetType="{x:Type MenuItem}">
+                <Setter Property="Command"
+                        Value="{Binding ChangeAccentCommand}" />
+                <Setter Property="Header"
+                        Value="{Binding Name, Mode=OneWay}" />
+                <Setter Property="Icon"
+                        Value="{StaticResource AccentMenuIcon}" />
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout x:Name="firstFlyout"
+                        Header="Theme Setting"
+                        Position="Right">
+                <!-- Your custom content here -->
+                <Menu>
+                    <MenuItem x:Name="menu_theme"
+                              Header="Theme"
+                              ItemContainerStyle="{StaticResource AppThemeMenuItemStyle}" />
+
+
+                    <MenuItem x:Name="menu_Accent"
+                              Header="Accent"
+                              ItemContainerStyle="{StaticResource AccentColorMenuItemStyle}" />
+
+
+                </Menu>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands>
+            <Button x:Name="btn_Setting"
+                    Click="btn_Setting_Click"
+                    Content="Theme Setting">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconModern Width="22"
+                                                      Height="22"
+                                                      VerticalAlignment="Center"
+                                                      Kind="Settings" />
+                            <TextBlock Margin="4 0 0 0"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
+    <Grid>
+        <Grid x:Name="gird_Control"
+              Visibility="Visible"
+              IsEnabled="False">
+            <GroupBox x:Name="groupBox_Mode"
+                      Header="GroupBox Mode"
+                      HorizontalAlignment="Left"
+                      Height="104"
+                      Margin="10,10,0,0"
+                      VerticalAlignment="Top"
+                      Width="153">
+                <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
+                                  x:Name="btn_manual"
+                                  Header="Auto/Manual"
+                                  OffContent="Auto"
+                                  OnContent="Manual"
+                                  VerticalAlignment="Top"
+                                  HorizontalAlignment="Left" />
+            </GroupBox>
+            <GroupBox x:Name="groupBox_InsideMC"
+                      Header="GroupBox Inside MC"
+                      HorizontalAlignment="Left"
+                      Height="279"
+                      Margin="10,119,0,0"
+                      VerticalAlignment="Top"
+                      Width="153">
+                <Grid>
+                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
+                                      x:Name="btn_pallet"
+                                      Header="PALLET"
+                                      OffContent="CLOSE"
+                                      OnContent="OPEN"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left" />
+                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
+                                      x:Name="btn_xilanh1"
+                                      Header="XI LANH 1"
+                                      OffContent="OFF"
+                                      OnContent="ON"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      Margin="0,59.62,0,0" />
+                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
+                                      x:Name="btn_xilanh2"
+                                      Header="XI LANH 2"
+                                      OffContent="OFF"
+                                      OnContent="ON"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      Margin="0,119.24,0,0" />
+                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
+                                      x:Name="btn_xilanh3"
+                                      Header="XI LANH 3"
+                                      OffContent="OFF"
+                                      OnContent="ON"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      Margin="0,178.86,0,0" />
+                </Grid>
+            </GroupBox>
+            <GroupBox  x:Name="groupBox_Jig1"
+                       Header="GroupBox jig1"
+                       HorizontalAlignment="Left"
+                       Height="279"
+                       Margin="168,119,0,0"
+                       VerticalAlignment="Top"
+                       Width="153">
+                <Grid>
+                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
+                                      x:Name="btn_xilanh41"
+                                      Header="XI LANH 41"
+                                      OffContent="OFF"
+                                      OnContent="ON"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left" />
+                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
+                                      x:Name="btn_xilanh51"
+                                      Header="XI LANH 51"
+                                      OffContent="OFF"
+                                      OnContent="ON"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      Margin="0,59.62,0,0" />
+                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
+                                      x:Name="btn_xilanh61"
+                                      Header="XI LANH 61"
+                                      OffContent="OFF"
+                                      OnContent="ON"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      Margin="0,119.24,0,0" />
+                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
+                                      x:Name="btn_xilanh71"
+                                      Header="XI LANH 71"
+                                      OffContent="OFF"
+                                      OnContent="ON"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      Margin="0,178.86,0,0" />
+                </Grid>
+            </GroupBox>
+            <GroupBox x:Name="groupBox_Jig2"
+                      Header="GroupBox jig2"
+                      HorizontalAlignment="Left"
+                      Height="279"
+                      Margin="326,119,0,0"
+                      VerticalAlignment="Top"
+                      Width="153">
+                <Grid>
+                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
+                                      x:Name="btn_xilanh42"
+                                      Header="XI LANH 42"
+                                      OffContent="OFF"
+                                      OnContent="ON"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left" />
+                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
+                                      x:Name="btn_xilanh52"
+                                      Header="XI LANH 52"
+                                      OffContent="OFF"
+                                      OnContent="ON"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      Margin="0,59.62,0,0" />
+                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
+                                      x:Name="btn_xilanh62"
+                                      Header="XI LANH 62"
+                                      OffContent="OFF"
+                                      OnContent="ON"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      Margin="0,119.24,0,0" />
+                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
+                                      x:Name="btn_xilanh72"
+                                      Header="XI LANH 72"
+                                      OffContent="OFF"
+                                      OnContent="ON"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      Margin="0,178.86,0,0" />
+                </Grid>
+            </GroupBox>
+            <GroupBox x:Name="groupBox_Lamp"
+                      Header="GroupBox lamp"
+                      HorizontalAlignment="Left"
+                      Height="104"
+                      Margin="168,10,0,0"
+                      VerticalAlignment="Top"
+                      Width="311">
+                <Grid>
+                    <mah:Tile x:Name="tile_yellow"
+                              Content=""
+                              HorizontalAlignment="Left"
+                              Margin="50.667,22,0,0"
+                              VerticalAlignment="Top"
+                              Width="63.333"
+                              Height="26.333"
+                              Background="#CCD70000" />
+                    <mah:Tile x:Name="tile_green"
+                              Content=""
+                              HorizontalAlignment="Left"
+                              Margin="119,22,0,0"
+                              VerticalAlignment="Top"
+                              Width="63.333"
+                              Height="26.333"
+                              Background="#CC44D700" />
+                    <mah:Tile x:Name="tile_red"
+                              Content=""
+                              HorizontalAlignment="Left"
+                              Margin="187.333,22,0,0"
+                              VerticalAlignment="Top"
+                              Width="63.333"
+                              Height="26.333"
+                              Background="#CCD7D700" />
+
+                </Grid>
+            </GroupBox>
+            <GroupBox x:Name="groupBox_Sensor"
+                      Header="GroupBox sensor"
+                      HorizontalAlignment="Left"
+                      Height="388"
+                      Margin="484,10,0,0"
+                      VerticalAlignment="Top"
+                      Width="214">
+                <Grid>
+                    <mah:Tile x:Name="tile_ss1a"
+                              Content="SS1A"
+                              HorizontalAlignment="Left"
+                              Margin="6.996,14.667,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss1b"
+                              Content="SS1B"
+                              HorizontalAlignment="Left"
+                              Margin="54.33,14.667,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss2a"
+                              Content="SS2A"
+                              HorizontalAlignment="Left"
+                              Margin="6.996,34.334,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss2b"
+                              Content="SS2B"
+                              HorizontalAlignment="Left"
+                              Margin="53.663,34.334,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss41a"
+                              Content="SS41A"
+                              HorizontalAlignment="Left"
+                              Margin="6.996,71.667,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss41b"
+                              Content="SS41B"
+                              HorizontalAlignment="Left"
+                              Margin="54.33,71.667,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss51a"
+                              Content="SS51A"
+                              HorizontalAlignment="Left"
+                              Margin="6.996,91.334,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss51b"
+                              Content="SS51B"
+                              HorizontalAlignment="Left"
+                              Margin="54.33,91.334,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss61a"
+                              Content="SS61A"
+                              HorizontalAlignment="Left"
+                              Margin="6.996,111.001,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss61b"
+                              Content="SS61B"
+                              HorizontalAlignment="Left"
+                              Margin="54.33,111.001,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss42a"
+                              Content="SS42A"
+                              HorizontalAlignment="Left"
+                              Margin="106.995,71.667,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss42b"
+                              Content="SS42B"
+                              HorizontalAlignment="Left"
+                              Margin="154.329,71.667,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss52a"
+                              Content="SS52A"
+                              HorizontalAlignment="Left"
+                              Margin="106.995,91.334,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss52b"
+                              Content="SS52B"
+                              HorizontalAlignment="Left"
+                              Margin="154.329,91.334,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss62a"
+                              Content="SS62A"
+                              HorizontalAlignment="Left"
+                              Margin="106.995,111.001,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_ss62b"
+                              Content="SS62B"
+                              HorizontalAlignment="Left"
+                              Margin="154.329,111.001,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_jig1"
+                              Content="JIG1"
+                              HorizontalAlignment="Left"
+                              Margin="6.329,153.668,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_jig2"
+                              Content="JIG2"
+                              HorizontalAlignment="Left"
+                              Margin="53.663,153.668,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_start"
+                              Content="START"
+                              HorizontalAlignment="Left"
+                              Margin="106.995,153.668,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_stop"
+                              Content="STOP"
+                              HorizontalAlignment="Left"
+                              Margin="154.329,153.668,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_open"
+                              Content="OPEN"
+                              HorizontalAlignment="Left"
+                              Margin="106.995,14.667,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                    <mah:Tile x:Name="tile_close"
+                              Content="CLOSE"
+                              HorizontalAlignment="Left"
+                              Margin="154.329,14.667,0,0"
+                              VerticalAlignment="Top"
+                              Width="42.334"
+                              Height="14.667" />
+                </Grid>
+            </GroupBox>
+            <StatusBar x:Name="statusBar"
+                       Height="25"
+                       VerticalAlignment="Bottom">
+                <TextBlock x:Name="tbl_cpu"
+                           Text="CPU:" />
+                <TextBlock x:Name="tbl_ip"
+                           Text="IP:" />
+                <TextBlock x:Name="tbl_connect"
+                           Text="Connect:" />
+            </StatusBar>
+        </Grid>
+        <Grid x:Name="grid_Connecting"
+              d:IsHidden="True">
+            <mah:ProgressRing Foreground="{DynamicResource MahApps.Brushes.AccentBase
+}"
+                              IsActive="True"
+                              Height="200"
+                              Width="200" />
+            <TextBlock x:Name="tbl_Connecting"
+                       HorizontalAlignment="Center"
+                       TextWrapping="Wrap"
+                       Text="Đang kết nối"
+                       VerticalAlignment="Center"
+                       FontWeight="Bold"
+                       FontSize="20" />
+            <TextBlock x:Name="tbl_ConnectPLC"
+                       HorizontalAlignment="Center"
+                       Text="Connecting to PLC. Please wait!"
+                       VerticalAlignment="Bottom"
+                       FontWeight="Bold"
+                       FontSize="16"
+                       Width="auto" />
+        </Grid>
+    </Grid>
+</mah:MetroWindow>
