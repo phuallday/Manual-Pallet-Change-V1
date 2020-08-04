@@ -86,20 +86,20 @@ namespace s7dotnet {
                 }
             ReadData:
                 while (true) {
-                    byte[] buffer_InPut = new byte[4];
-                    byte[] buffer_OutPut = new byte[4];
+                    byte[] buffer_InPut = new byte[3];
+                    byte[] buffer_OutPut = new byte[3];
                     byte[] buffer_Memory = new byte[1];
                     while (idle == false) ;
                     idle = false;
                     #region [ReadInPut]
-                    int readInput = s7Client.ReadArea(S7Client.S7AreaPE, 0, 0, 4, S7Client.S7WLByte, buffer_InPut);
+                    int readInput = s7Client.ReadArea(S7Client.S7AreaPE, 0, 0, 3, S7Client.S7WLByte, buffer_InPut);
 #if debug
                     Console.WriteLine($"Read InPut:{s7Client.ErrorText(readInput)}");
 #endif
                     if (readInput != 0) goto Connect;
                     #endregion
                     #region [ReadOutPut]
-                    int readOutPut = s7Client.ReadArea(S7Client.S7AreaPA, 0, 0, 4, S7Client.S7WLByte, buffer_OutPut);
+                    int readOutPut = s7Client.ReadArea(S7Client.S7AreaPA, 0, 0, 3, S7Client.S7WLByte, buffer_OutPut);
 #if debug
                     Console.WriteLine($"Read OutPut:{s7Client.ErrorText(readOutPut)}");
 #endif
@@ -117,47 +117,33 @@ namespace s7dotnet {
                     Dispatcher.Invoke(delegate {
                         var color_Theme = ThemeManager.Current.DetectTheme(Application.Current).ShowcaseBrush;
                         statusBar.Background = ThemeManager.Current.DetectTheme(Application.Current).ShowcaseBrush;
-                        btn_xilanh1.IsOn = (S7.GetBitAt(buffer_OutPut, 0, 3) == true) & (S7.GetBitAt(buffer_OutPut, 0, 4) == false);
-                        btn_xilanh2.IsOn = (S7.GetBitAt(buffer_OutPut, 0, 5) == true) & (S7.GetBitAt(buffer_OutPut, 0, 6) == false);
-                        btn_xilanh3.IsOn = S7.GetBitAt(buffer_OutPut, 0, 7);
-                        btn_xilanh41.IsOn = (S7.GetBitAt(buffer_OutPut, 1, 0) == true) & (S7.GetBitAt(buffer_OutPut, 1, 1) == false);
-                        btn_xilanh51.IsOn = S7.GetBitAt(buffer_OutPut, 2, 0);
-                        btn_xilanh61.IsOn = S7.GetBitAt(buffer_OutPut, 2, 1);
-                        btn_xilanh71.IsOn = S7.GetBitAt(buffer_OutPut, 2, 2);
-                        btn_xilanh42.IsOn = (S7.GetBitAt(buffer_OutPut, 2, 3) == true) & (S7.GetBitAt(buffer_OutPut, 2, 4) == false);
-                        btn_xilanh52.IsOn = S7.GetBitAt(buffer_OutPut, 2, 5);
-                        btn_xilanh62.IsOn = S7.GetBitAt(buffer_OutPut, 2, 6);
-                        btn_xilanh72.IsOn = S7.GetBitAt(buffer_OutPut, 2, 7);
-                        btn_pallet.IsOn = S7.GetBitAt(buffer_OutPut, 3, 0);
+                        btn_xilanh1.IsOn = S7.GetBitAt(buffer_OutPut, 0, 0);
+                        btn_xilanh2.IsOn = S7.GetBitAt(buffer_OutPut, 0, 1);
+                        btn_xilanh3.IsOn = S7.GetBitAt(buffer_OutPut, 0, 2);
+                        btn_xilanh4.IsOn = S7.GetBitAt(buffer_OutPut, 0, 3);
+                        btn_xilanh5.IsOn = S7.GetBitAt(buffer_OutPut, 0, 4);
+                        btn_xilanh6.IsOn = S7.GetBitAt(buffer_OutPut, 2, 0);
+                        btn_xilanh7.IsOn = S7.GetBitAt(buffer_OutPut, 2, 1);
+                        btn_pallet.IsOn = S7.GetBitAt(buffer_OutPut, 0, 5);
                         btn_manual.IsOn = S7.GetBitAt(buffer_Memory, 0, 1);
 
-                        tile_red.Background = S7.GetBitAt(buffer_OutPut, 0, 0) ? Brushes.Red : mColor("#454545");
-                        tile_green.Background = S7.GetBitAt(buffer_OutPut, 0, 1) ? Brushes.Green : mColor("#454545");
-                        tile_yellow.Background = S7.GetBitAt(buffer_OutPut, 0, 2) ? Brushes.Yellow : mColor("#454545");
+                        tile_red.Background = S7.GetBitAt(buffer_OutPut, 0, 7) ? Brushes.Red : mColor("#454545");
+                        tile_green.Background = S7.GetBitAt(buffer_OutPut, 1, 0) ? Brushes.Green : mColor("#454545");
+                        tile_yellow.Background = S7.GetBitAt(buffer_OutPut, 1, 1) ? Brushes.Yellow : mColor("#454545");
 
-                        tile_start.Background = S7.GetBitAt(buffer_InPut, 0, 0) ? color_Theme : mColor("#454545");
-                        tile_stop.Background = S7.GetBitAt(buffer_InPut, 0, 1) ? color_Theme : mColor("#454545");
-                        tile_ss1a.Background = S7.GetBitAt(buffer_InPut, 0, 2) ? color_Theme : mColor("#454545");
-                        tile_ss1b.Background = S7.GetBitAt(buffer_InPut, 0, 3) ? color_Theme : mColor("#454545");
-                        tile_ss2a.Background = S7.GetBitAt(buffer_InPut, 0, 4) ? color_Theme : mColor("#454545");
+                        tile_ss1a.Background = S7.GetBitAt(buffer_InPut, 0, 3) ? color_Theme : mColor("#454545");
+                        tile_ss1b.Background = S7.GetBitAt(buffer_InPut, 0, 4) ? color_Theme : mColor("#454545");
                         tile_ss2b.Background = S7.GetBitAt(buffer_InPut, 0, 5) ? color_Theme : mColor("#454545");
-                        tile_ss41a.Background = S7.GetBitAt(buffer_InPut, 0, 6) ? color_Theme : mColor("#454545");
-                        tile_ss41b.Background = S7.GetBitAt(buffer_InPut, 0, 7) ? color_Theme : mColor("#454545");
-                        tile_ss51a.Background = S7.GetBitAt(buffer_InPut, 1, 0) ? color_Theme : mColor("#454545");
-                        tile_ss51b.Background = S7.GetBitAt(buffer_InPut, 1, 1) ? color_Theme : mColor("#454545");
-                        tile_ss61a.Background = S7.GetBitAt(buffer_InPut, 1, 2) ? color_Theme : mColor("#454545");
-                        tile_ss61b.Background = S7.GetBitAt(buffer_InPut, 1, 3) ? color_Theme : mColor("#454545");
-                        tile_ss42a.Background = S7.GetBitAt(buffer_InPut, 1, 4) ? color_Theme : mColor("#454545");
-                        tile_ss42b.Background = S7.GetBitAt(buffer_InPut, 1, 5) ? color_Theme : mColor("#454545");
-                        tile_ss52a.Background = S7.GetBitAt(buffer_InPut, 2, 0) ? color_Theme : mColor("#454545");
-                        tile_ss52b.Background = S7.GetBitAt(buffer_InPut, 2, 1) ? color_Theme : mColor("#454545");
-                        tile_ss62a.Background = S7.GetBitAt(buffer_InPut, 2, 2) ? color_Theme : mColor("#454545");
-                        tile_ss62b.Background = S7.GetBitAt(buffer_InPut, 2, 3) ? color_Theme : mColor("#454545");
-                        tile_jig1.Background = S7.GetBitAt(buffer_InPut, 2, 4) ? color_Theme : mColor("#454545");
-                        tile_jig2.Background = S7.GetBitAt(buffer_InPut, 2, 5) ? color_Theme : mColor("#454545");
-                        tile_open.Background = S7.GetBitAt(buffer_InPut, 2, 6) ? color_Theme : mColor("#454545");
-                        tile_close.Background = S7.GetBitAt(buffer_InPut, 2, 7) ? color_Theme : mColor("#454545");
-                        groupBox_InsideMC.IsEnabled = groupBox_Jig1.IsEnabled = groupBox_Jig2.IsEnabled = btn_manual.IsOn;
+                        tile_ss3a.Background = S7.GetBitAt(buffer_InPut, 0, 6) ? color_Theme : mColor("#454545");
+                        tile_ss3b.Background = S7.GetBitAt(buffer_InPut, 0, 7) ? color_Theme : mColor("#454545");
+                        tile_ss4a.Background = S7.GetBitAt(buffer_InPut, 1, 0) ? color_Theme : mColor("#454545");
+                        tile_ss4b.Background = S7.GetBitAt(buffer_InPut, 1, 1) ? color_Theme : mColor("#454545");
+                        tile_ss5b.Background = S7.GetBitAt(buffer_InPut, 1, 2) ? color_Theme : mColor("#454545");
+                        tile_jig1.Background = S7.GetBitAt(buffer_InPut, 1, 3) ? color_Theme : mColor("#454545");
+                        tile_jig2.Background = S7.GetBitAt(buffer_InPut, 1, 4) ? color_Theme : mColor("#454545");
+                        tile_open.Background = S7.GetBitAt(buffer_InPut, 2, 2) ? color_Theme : mColor("#454545");
+                        tile_close.Background = S7.GetBitAt(buffer_InPut, 1, 5) ? color_Theme : mColor("#454545");
+                        groupBox_InsideMC.IsEnabled = groupBox_Jig1.IsEnabled = btn_manual.IsOn;
                     });
                     #endregion
                     Thread.Sleep(500);
@@ -174,19 +160,12 @@ namespace s7dotnet {
                         //S7.SetBitAt(ref wOutPut, 0, 4, false);
                         while (idle == false) ;
                         idle = false;
-                        #region [WriteQ03]
-                        int writeQ03 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 0 });
+                        #region [WriteQ00]
+                        int writeQ00 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 0 });
 #if debug
-                        Console.WriteLine($"Write Q03:{s7Client.ErrorText(writeQ03)}");
+                        Console.WriteLine($"Write Q00:{s7Client.ErrorText(writeQ00)}");
 #endif
-                        if (writeQ03 != 0) { idle = true; return; }
-                        #endregion
-                        #region [WriteQ04]
-                        int writeQ04 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 4, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
-                        Console.WriteLine($"Write Q04:{s7Client.ErrorText(writeQ04)}");
-#endif
-                        if (writeQ04 != 0) { idle = true; return; }
+                        if (writeQ00 != 0) { idle = true; return; }
                         #endregion
                         idle = true;
 
@@ -196,22 +175,15 @@ namespace s7dotnet {
                         //S7.SetBitAt(ref wOutPut, 0, 4, true);
                         while (idle == false) ;
                         idle = false;
-                        #region [WriteQ03]
-                        int writeQ03 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 1 });
+                    #region [WriteQ00]
+                    int writeQ00 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 1 });
 #if debug
-                        Console.WriteLine($"Write Q03:{s7Client.ErrorText(writeQ03)}");
+                    Console.WriteLine($"Write Q00:{s7Client.ErrorText(writeQ00)}");
 #endif
-                        if (writeQ03 != 0) { idle = true; return; }
-                        #endregion
-                        #region [WriteQ04]
-                        int writeQ04 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 4, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
-                        Console.WriteLine($"Write Q04:{s7Client.ErrorText(writeQ04)}");
-#endif
-                        if (writeQ04 != 0) { idle = true; return; }
-                        #endregion
-                        idle = true;
-                    }
+                    if (writeQ00 != 0) { idle = true; return; }
+                    #endregion
+                    idle = true;
+                }
                     break;
 
                 case "btn_xilanh2":
@@ -220,16 +192,11 @@ namespace s7dotnet {
                         //S7.SetBitAt(ref wOutPut, 0, 6, false);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ05 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 5, 1, S7Client.S7WLBit, new byte[] { 0 });
+                        int writeQ05 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 0 });
 #if debug
                         Console.WriteLine($"Write Q05:{s7Client.ErrorText(writeQ05)}");
 #endif
                         if (writeQ05 != 0) { idle = true; return; }
-                        int writeQ06 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 6, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
-                        Console.WriteLine($"Write Q06:{s7Client.ErrorText(writeQ06)}");
-#endif
-                        if (writeQ06 != 0) { idle = true; return; }
                         idle = true;
                     }
                     else {
@@ -237,16 +204,11 @@ namespace s7dotnet {
                         //S7.SetBitAt(ref wOutPut, 0, 6, true);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ05 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 5, 1, S7Client.S7WLBit, new byte[] { 1 });
+                        int writeQ05 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 1 });
 #if debug
                         Console.WriteLine($"Write Q05:{s7Client.ErrorText(writeQ05)}");
 #endif
                         if (writeQ05 != 0) { idle = true; return; }
-                        int writeQ06 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 6, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
-                        Console.WriteLine($"Write Q06:{s7Client.ErrorText(writeQ06)}");
-#endif
-                        if (writeQ06 != 0) { idle = true; return; }
                         idle = true;
                     }
                     break;
@@ -255,7 +217,7 @@ namespace s7dotnet {
                         //S7.SetBitAt(ref wOutPut, 0, 7, true);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ07 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 7, 1, S7Client.S7WLBit, new byte[] { 0 });
+                        int writeQ07 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 0 });
 #if debug
                         Console.WriteLine($"Write Q07:{s7Client.ErrorText(writeQ07)}");
 #endif
@@ -266,7 +228,7 @@ namespace s7dotnet {
                         //S7.SetBitAt(ref wOutPut, 0, 7, false);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ07 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 7, 1, S7Client.S7WLBit, new byte[] { 1 });
+                        int writeQ07 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 1 });
 #if debug
                         Console.WriteLine($"Write Q07:{s7Client.ErrorText(writeQ07)}");
 #endif
@@ -274,22 +236,17 @@ namespace s7dotnet {
                         idle = true;
                     }
                     break;
-                case "btn_xilanh41":
-                    if (btn_xilanh41.IsOn) {
+                case "btn_xilanh4":
+                    if (btn_xilanh4.IsOn) {
                         //S7.SetBitAt(ref wOutPut, 1, 0, true);
                         //S7.SetBitAt(ref wOutPut, 1, 1, false);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ10 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 1 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 0 });
+                        int writeQ10 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 0 });
 #if debug
                         Console.WriteLine($"Write Q10:{s7Client.ErrorText(writeQ10)}");
 #endif
                         if (writeQ10 != 0) { idle = true; return; }
-                        int writeQ11 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 1 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
-                        Console.WriteLine($"Write Q11:{s7Client.ErrorText(writeQ11)}");
-#endif
-                        if (writeQ11 != 0) { idle = true; return; }
                         idle = true;
                     }
                     else {
@@ -297,25 +254,20 @@ namespace s7dotnet {
                         //S7.SetBitAt(ref wOutPut, 1, 1, true);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ10 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 1 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 1 });
+                        int writeQ10 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 1 });
 #if debug
                         Console.WriteLine($"Write Q10:{s7Client.ErrorText(writeQ10)}");
 #endif
                         if (writeQ10 != 0) { idle = true; return; }
-                        int writeQ11 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 1 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
-                        Console.WriteLine($"Write Q11:{s7Client.ErrorText(writeQ11)}");
-#endif
-                        if (writeQ11 != 0) { idle = true; return; }
                         idle = true;
                     }
                     break;
-                case "btn_xilanh51":
-                    if (btn_xilanh51.IsOn) {
+                case "btn_xilanh5":
+                    if (btn_xilanh5.IsOn) {
                         //S7.SetBitAt(ref wOutPut, 2, 0, true);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ20 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 0 });
+                        int writeQ20 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 4, 1, S7Client.S7WLBit, new byte[] { 0 });
 #if debug
                         Console.WriteLine($"Write Q20:{s7Client.ErrorText(writeQ20)}");
 #endif
@@ -326,7 +278,7 @@ namespace s7dotnet {
                         //S7.SetBitAt(ref wOutPut, 2, 0, false);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ20 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 1 });
+                        int writeQ20 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 4, 1, S7Client.S7WLBit, new byte[] { 1 });
 #if debug
                         Console.WriteLine($"Write Q20:{s7Client.ErrorText(writeQ20)}");
 #endif
@@ -334,12 +286,12 @@ namespace s7dotnet {
                         idle = true;
                     }
                     break;
-                case "btn_xilanh61":
-                    if (btn_xilanh61.IsOn) {
+                case "btn_xilanh6":
+                    if (btn_xilanh6.IsOn) {
                         //S7.SetBitAt(ref wOutPut, 2, 1, true);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ21 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 0 });
+                        int writeQ21 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 0 });
 #if debug
                         Console.WriteLine($"Write Q21:{s7Client.ErrorText(writeQ21)}");
 #endif
@@ -350,7 +302,7 @@ namespace s7dotnet {
                         //S7.SetBitAt(ref wOutPut, 2, 1, false);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ21 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 1 });
+                        int writeQ21 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 1 });
 #if debug
                         Console.WriteLine($"Write Q21:{s7Client.ErrorText(writeQ21)}");
 #endif
@@ -358,12 +310,12 @@ namespace s7dotnet {
                         idle = true;
                     }
                     break;
-                case "btn_xilanh71":
-                    if (btn_xilanh71.IsOn) {
+                case "btn_xilanh7":
+                    if (btn_xilanh7.IsOn) {
                         //S7.SetBitAt(ref wOutPut, 2, 2, true);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 0 });
+                        int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 0 });
 #if debug
                         Console.WriteLine($"Write Q22:{s7Client.ErrorText(writeQ22)}");
 #endif
@@ -374,120 +326,11 @@ namespace s7dotnet {
                         //S7.SetBitAt(ref wOutPut, 2, 2, false);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 1 });
+                        int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 1 });
 #if debug
                         Console.WriteLine($"Write Q22:{s7Client.ErrorText(writeQ22)}");
 #endif
                         if (writeQ22 != 0) { idle = true; return; }
-                        idle = true;
-                    }
-                    break;
-
-                case "btn_xilanh42":
-                    if (btn_xilanh42.IsOn) {
-                        //S7.SetBitAt(ref wOutPut, 2, 3, true);
-                        //S7.SetBitAt(ref wOutPut, 2, 4, false);
-                        while (idle == false) ;
-                        idle = false;
-                        int writeQ23 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
-                        Console.WriteLine($"Write Q23:{s7Client.ErrorText(writeQ23)}");
-#endif
-                        if (writeQ23 != 0) { idle = true; return; }
-                        int writeQ24 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 4, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
-                        Console.WriteLine($"Write Q24:{s7Client.ErrorText(writeQ24)}");
-#endif
-                        if (writeQ24 != 0) { idle = true; return; }
-                        idle = true;
-                    }
-                    else {
-                        //S7.SetBitAt(ref wOutPut, 2, 3, false);
-                        //S7.SetBitAt(ref wOutPut, 2, 4, true);
-                        while (idle == false) ;
-                        idle = false;
-                        int writeQ23 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
-                        Console.WriteLine($"Write Q25:{s7Client.ErrorText(writeQ23)}");
-#endif
-                        if (writeQ23 != 0) { idle = true; return; }
-                        int writeQ24 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 4, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
-                        Console.WriteLine($"Write Q26:{s7Client.ErrorText(writeQ24)}");
-#endif
-                        if (writeQ24 != 0) { idle = true; return; }
-                        idle = true;
-                    }
-                    break;
-                case "btn_xilanh52":
-                    if (btn_xilanh52.IsOn) {
-                        //S7.SetBitAt(ref wOutPut, 2, 5, true);
-                        while (idle == false) ;
-                        idle = false;
-                        int writeQ25 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 5, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
-                        Console.WriteLine($"Write Q25:{s7Client.ErrorText(writeQ25)}");
-#endif
-                        if (writeQ25 != 0) { idle = true; return; }
-                        idle = true;
-                    }
-                    else {
-                        //S7.SetBitAt(ref wOutPut, 2, 5, false);
-                        while (idle == false) ;
-                        idle = false;
-                        int writeQ25 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 5, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
-                        Console.WriteLine($"Write Q25:{s7Client.ErrorText(writeQ25)}");
-#endif
-                        if (writeQ25 != 0) { idle = true; return; }
-                        idle = true;
-                    }
-                    break;
-                case "btn_xilanh62":
-                    if (btn_xilanh62.IsOn) {
-                        //S7.SetBitAt(ref wOutPut, 2, 6, true);
-                        while (idle == false) ;
-                        idle = false;
-                        int writeQ26 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 6, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
-                        Console.WriteLine($"Write Q26:{s7Client.ErrorText(writeQ26)}");
-#endif
-                        if (writeQ26 != 0) { idle = true; return; }
-                        idle = true;
-                    }
-                    else {
-                        //S7.SetBitAt(ref wOutPut, 2, 6, false);
-                        while (idle == false) ;
-                        idle = false;
-                        int writeQ26 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 6, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
-                        Console.WriteLine($"Write Q26:{s7Client.ErrorText(writeQ26)}");
-#endif
-                        if (writeQ26 != 0) { idle = true; return; }
-                        idle = true;
-                    }
-                    break;
-                case "btn_xilanh72":
-                    if (btn_xilanh72.IsOn) {
-                        //S7.SetBitAt(ref wOutPut, 2, 7, true);
-                        while (idle == false) ;
-                        idle = false;
-                        int writeQ27 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 7, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
-                        Console.WriteLine($"Write Q27:{s7Client.ErrorText(writeQ27)}");
-#endif
-                        if (writeQ27 != 0) { idle = true; return; }
-                        idle = true;
-                    }
-                    else {
-                        //S7.SetBitAt(ref wOutPut, 2, 7, false);
-                        while (idle == false) ;
-                        idle = false;
-                        int writeQ27 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 7, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
-                        Console.WriteLine($"Write Q27:{s7Client.ErrorText(writeQ27)}");
-#endif
-                        if (writeQ27 != 0) { idle = true; return; }
                         idle = true;
                     }
                     break;
@@ -496,7 +339,7 @@ namespace s7dotnet {
                         //S7.SetBitAt(ref wOutPut, 3, 0, true);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ30 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 3 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 0 });
+                        int writeQ30 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 5, 1, S7Client.S7WLBit, new byte[] { 0 });
 #if debug
                         Console.WriteLine($"Write Q30:{s7Client.ErrorText(writeQ30)}");
 #endif
@@ -507,7 +350,7 @@ namespace s7dotnet {
                         //S7.SetBitAt(ref wOutPut, 3, 0, false);
                         while (idle == false) ;
                         idle = false;
-                        int writeQ30 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 3 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 1 });
+                        int writeQ30 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 5, 1, S7Client.S7WLBit, new byte[] { 1 });
 #if debug
                         Console.WriteLine($"Write Q30:{s7Client.ErrorText(writeQ30)}");
 #endif
