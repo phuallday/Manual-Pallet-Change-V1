@@ -12,13 +12,19 @@ using System.Linq;
 using System.Windows.Input;
 using System.Reflection;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace s7dotnet {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : MetroWindow {
+        
+
+        private const int SW_SHOWMAXIMIZED = 3;
+
         S7Client s7Client = new S7Client();
+
         private bool idle = false;
         public MainWindow() {
             InitializeComponent();
@@ -32,16 +38,7 @@ namespace s7dotnet {
             return brush;
         }
         private void metroWindow_Loaded(object sender, RoutedEventArgs e) {
-            using (Process x1 = Process.GetCurrentProcess()) {
-                foreach (Process x2 in Process.GetProcesses()) {
-                    if (x2.ProcessName == x1.ProcessName) {
-                        if (x1.Id != x2.Id) {
-                            MessageBox.Show("Appication already running!");
-                            Application.Current.Shutdown();
-                        }
-                    }
-                }
-            }
+
             metroWindow.Title = $"Pallet Change Manual Control V1 _build-{Assembly.GetEntryAssembly().GetName().Version}";
             menu_Accent.ItemsSource = ThemeManager.Current.Themes
                                             .GroupBy(x => x.ColorScheme)

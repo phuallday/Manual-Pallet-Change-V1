@@ -7,13 +7,13 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Pallet Change Manual V2")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Pallet Change Manual V1")]
+[assembly: AssemblyDescription("Pallet Change Manual V1")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Pallet Change Manual V2")]
+[assembly: AssemblyCompany("SPC")]
+[assembly: AssemblyProduct("Pallet Change Manual V1")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("Pallet Change Manual V1")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
