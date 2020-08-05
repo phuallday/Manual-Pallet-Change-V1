@@ -47,7 +47,7 @@ namespace s7dotnet {
                                          .Select(x => x.First())
                                          .Select(a => new AppThemeMenuData() { Name = a.BaseColorScheme, BorderColorBrush = a.Resources["MahApps.Brushes.ThemeForeground"] as Brush, ColorBrush = a.Resources["MahApps.Brushes.ThemeBackground"] as Brush });
             #endregion
-            tbl_cpu.Text = "S71200";
+            tbl_cpu.Text = $"S71200 - {ConfigurationManager.AppSettings["Machine"]}";
             tbl_ip.Text = ConfigurationManager.AppSettings["IP"];
             Thread thread = new Thread(new ThreadStart(() => {
             Connect:
@@ -64,7 +64,7 @@ namespace s7dotnet {
                             gird_Control.IsEnabled = true;
                             idle = true;
                         });
-                        goto ReadSQL;
+                        goto ReadData;
                     }
                     else { //update ui
                         Dispatcher.Invoke(delegate {
@@ -79,70 +79,6 @@ namespace s7dotnet {
                     }
                     Thread.Sleep(500);
                 }
-            ReadSQL:
-                using (OleDbConnection connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["192.168.100.100"].ConnectionString)) {
-                    OleDbCommand oleDbCommand = new OleDbCommand($"SELECT [ID] FROM[OST].[dbo].[Assy_Stage] WHERE[Machine] = '{ConfigurationManager.AppSettings["Machine"]}'", connection);
-                    connection.Open();
-                    OleDbDataReader reader = oleDbCommand.ExecuteReader();
-                    while (reader.Read()) {
-                        if (reader[0].ToString() == "0") {
-                            int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug 
-                            Console.WriteLine($"Write Q22:{s7Client.ErrorText(writeQ22)}");
-#endif
-                            if (writeQ22 != 0) { 
-                                reader.Close();
-                                goto Connect;
-                            }
-                            
-                            int writeQ23 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
-                            Console.WriteLine($"Write Q23:{s7Client.ErrorText(writeQ23)}");
-#endif
-                            if (writeQ23 != 0) {
-                                reader.Close();
-                                goto Connect;
-                            }
-                        }
-
-                        else if (reader[0].ToString() == "1") {
-                            int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
-                            Console.WriteLine($"Write Q22:{s7Client.ErrorText(writeQ22)}");
-#endif
-                            if (writeQ22 != 0) goto Connect;
-                            int writeQ23 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
-                            Console.WriteLine($"Write Q23:{s7Client.ErrorText(writeQ23)}");
-#endif
-                            if (writeQ23 != 0) {
-                                reader.Close();
-                                goto Connect;
-                            }
-                        }
-
-                        else if (reader[0].ToString() == "2") {
-                            int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
-                            Console.WriteLine($"Write Q22:{s7Client.ErrorText(writeQ22)}");
-#endif
-                            if (writeQ22 != 0) {
-                                reader.Close();
-                                goto Connect;
-                            }
-                            int writeQ23 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
-                            Console.WriteLine($"Write Q23:{s7Client.ErrorText(writeQ23)}");
-#endif
-                            if (writeQ23 != 0) {
-                                reader.Close();
-                                goto Connect;
-                            }
-                        }
-                    }
-                    reader.Close();
-                }
-                goto ReadData;
             ReadData:
                 while (true) {
                     byte[] buffer_InPut = new byte[3];
@@ -171,10 +107,97 @@ namespace s7dotnet {
 #endif
                     if (readMemory != 0) goto Connect;
 
-                    if(S7.GetBitAt(buffer_Memory, 0, 3)) { //m200.3
-
+                    if (S7.GetBitAt(buffer_Memory, 0, 3)) { //m200.3
+                        using (OleDbConnection connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["192.168.100.100"].ConnectionString)) {
+                            using (OleDbDataAdapter dataAdapter = new OleDbDataAdapter()) {
+                                OleDbCommand command = new OleDbCommand($"UPDATE [OST].[dbo].[Assy_Stage] SET [ID] = '1' WHERE [Machine] = '{ConfigurationManager.AppSettings["Machine"]}'", connection);
+                                connection.Open();
+                                dataAdapter.UpdateCommand = command;
+                                dataAdapter.UpdateCommand.ExecuteNonQuery();
+                                connection.Close();
+                            }
+                        }
+                        int writeM2003 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 200 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 0 });
+#if debug
+                        Console.WriteLine($"Write M2003:{s7Client.ErrorText(writeM2003)}");
+#endif
+                        if (writeM2003 != 0) goto Connect;
                     }
+                    else {
+                        using (OleDbConnection connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["192.168.100.100"].ConnectionString)) {
+                            using (OleDbDataAdapter dataAdapter = new OleDbDataAdapter()) {
+                                OleDbCommand command = new OleDbCommand($"UPDATE [OST].[dbo].[Assy_Stage] SET [ID] = '0' WHERE [Machine] = '{ConfigurationManager.AppSettings["Machine"]}'", connection);
+                                connection.Open();
+                                dataAdapter.UpdateCommand = command;
+                                dataAdapter.UpdateCommand.ExecuteNonQuery();
+                                connection.Close();
+                            }
+                        }
+                    }
+                    #endregion
+                    #region [ReadSQL]
+                    using (OleDbConnection connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["192.168.100.100"].ConnectionString)) {
+                        OleDbCommand oleDbCommand = new OleDbCommand($"SELECT [ID] FROM[OST].[dbo].[Assy_Stage] WHERE[Machine] = '{ConfigurationManager.AppSettings["Machine"]}'", connection);
+                        connection.Open();
+                        OleDbDataReader reader = oleDbCommand.ExecuteReader();
+                        while (reader.Read()) {
+                            if (reader[0].ToString() == "0") {
+                                int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 0 });
+#if debug
+                                Console.WriteLine($"Write Q22:{s7Client.ErrorText(writeQ22)}");
+#endif
+                                if (writeQ22 != 0) {
+                                    reader.Close();
+                                    goto Connect;
+                                }
 
+                                int writeQ23 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 0 });
+#if debug
+                                Console.WriteLine($"Write Q23:{s7Client.ErrorText(writeQ23)}");
+#endif
+                                if (writeQ23 != 0) {
+                                    reader.Close();
+                                    goto Connect;
+                                }
+                            }
+
+                            else if (reader[0].ToString() == "1") {
+                                int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 1 });
+#if debug
+                                Console.WriteLine($"Write Q22:{s7Client.ErrorText(writeQ22)}");
+#endif
+                                if (writeQ22 != 0) goto Connect;
+                                int writeQ23 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 0 });
+#if debug
+                                Console.WriteLine($"Write Q23:{s7Client.ErrorText(writeQ23)}");
+#endif
+                                if (writeQ23 != 0) {
+                                    reader.Close();
+                                    goto Connect;
+                                }
+                            }
+
+                            else if (reader[0].ToString() == "2") {
+                                int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 0 });
+#if debug
+                                Console.WriteLine($"Write Q22:{s7Client.ErrorText(writeQ22)}");
+#endif
+                                if (writeQ22 != 0) {
+                                    reader.Close();
+                                    goto Connect;
+                                }
+                                int writeQ23 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 1 });
+#if debug
+                                Console.WriteLine($"Write Q23:{s7Client.ErrorText(writeQ23)}");
+#endif
+                                if (writeQ23 != 0) {
+                                    reader.Close();
+                                    goto Connect;
+                                }
+                            }
+                        }
+                        reader.Close();
+                    }
                     #endregion
                     idle = true;
                     #region [UpdateUI]
@@ -216,7 +239,7 @@ namespace s7dotnet {
             thread.IsBackground = true;
             thread.Start();
         }
-        private void btn_Toggled(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+        private void btn_Toggled(object sender, MouseButtonEventArgs e) {
             switch ((sender as ToggleSwitch).Name) {
                 case "btn_xilanh1":
                 if (btn_xilanh1.IsOn) {
