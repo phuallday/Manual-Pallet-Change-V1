@@ -1,5 +1,4 @@
-﻿#define debug
-using MahApps.Metro.Controls;
+﻿using MahApps.Metro.Controls;
 using System;
 using System.Windows;
 using System.Windows.Media;
@@ -11,8 +10,6 @@ using ControlzEx.Theming;
 using System.Linq;
 using System.Windows.Input;
 using System.Reflection;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Data.OleDb;
 
 namespace s7dotnet {
@@ -53,7 +50,7 @@ namespace s7dotnet {
             Connect:
                 while (true) {
                     int i = s7Client.Connect();
-#if debug
+#if DEBUG
                     Console.WriteLine($"Connected:{s7Client.ErrorText(i)}");
 #endif
                     if (i == 0) {
@@ -88,21 +85,21 @@ namespace s7dotnet {
                     idle = false;
                     #region [ReadInPut]
                     int readInput = s7Client.ReadArea(S7Client.S7AreaPE, 0, 0, 3, S7Client.S7WLByte, buffer_InPut);
-#if debug
+#if DEBUG
                     Console.WriteLine($"Read InPut:{s7Client.ErrorText(readInput)}");
 #endif
                     if (readInput != 0) goto Connect;
                     #endregion
                     #region [ReadOutPut]
                     int readOutPut = s7Client.ReadArea(S7Client.S7AreaPA, 0, 0, 3, S7Client.S7WLByte, buffer_OutPut);
-#if debug
+#if DEBUG
                     Console.WriteLine($"Read OutPut:{s7Client.ErrorText(readOutPut)}");
 #endif
                     if (readOutPut != 0) goto Connect;
                     #endregion
                     #region [ReadMemory]
                     int readMemory = s7Client.ReadArea(S7Client.S7AreaMK, 0, 200, 1, S7Client.S7WLByte, buffer_Memory);
-#if debug
+#if DEBUG
                     Console.WriteLine($"Read Memory:{s7Client.ErrorText(readMemory)}");
 #endif
                     if (readMemory != 0) goto Connect;
@@ -118,7 +115,7 @@ namespace s7dotnet {
                             }
                         }
                         int writeM2003 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 200 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                         Console.WriteLine($"Write M2003:{s7Client.ErrorText(writeM2003)}");
 #endif
                         if (writeM2003 != 0) goto Connect;
@@ -143,7 +140,7 @@ namespace s7dotnet {
                         while (reader.Read()) {
                             if (reader[0].ToString() == "0") {
                                 int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                                 Console.WriteLine($"Write Q22:{s7Client.ErrorText(writeQ22)}");
 #endif
                                 if (writeQ22 != 0) {
@@ -152,7 +149,7 @@ namespace s7dotnet {
                                 }
 
                                 int writeQ23 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                                 Console.WriteLine($"Write Q23:{s7Client.ErrorText(writeQ23)}");
 #endif
                                 if (writeQ23 != 0) {
@@ -163,12 +160,12 @@ namespace s7dotnet {
 
                             else if (reader[0].ToString() == "1") {
                                 int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
+#if DEBUG
                                 Console.WriteLine($"Write Q22:{s7Client.ErrorText(writeQ22)}");
 #endif
                                 if (writeQ22 != 0) goto Connect;
                                 int writeQ23 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                                 Console.WriteLine($"Write Q23:{s7Client.ErrorText(writeQ23)}");
 #endif
                                 if (writeQ23 != 0) {
@@ -179,7 +176,7 @@ namespace s7dotnet {
 
                             else if (reader[0].ToString() == "2") {
                                 int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                                 Console.WriteLine($"Write Q22:{s7Client.ErrorText(writeQ22)}");
 #endif
                                 if (writeQ22 != 0) {
@@ -187,7 +184,7 @@ namespace s7dotnet {
                                     goto Connect;
                                 }
                                 int writeQ23 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
+#if DEBUG
                                 Console.WriteLine($"Write Q23:{s7Client.ErrorText(writeQ23)}");
 #endif
                                 if (writeQ23 != 0) {
@@ -249,7 +246,7 @@ namespace s7dotnet {
                     idle = false;
                     #region [WriteQ00]
                     int writeQ00 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q00:{s7Client.ErrorText(writeQ00)}");
 #endif
                     if (writeQ00 != 0) { idle = true; return; }
@@ -264,7 +261,7 @@ namespace s7dotnet {
                     idle = false;
                     #region [WriteQ00]
                     int writeQ00 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q00:{s7Client.ErrorText(writeQ00)}");
 #endif
                     if (writeQ00 != 0) { idle = true; return; }
@@ -280,7 +277,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ05 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q05:{s7Client.ErrorText(writeQ05)}");
 #endif
                     if (writeQ05 != 0) { idle = true; return; }
@@ -292,7 +289,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ05 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q05:{s7Client.ErrorText(writeQ05)}");
 #endif
                     if (writeQ05 != 0) { idle = true; return; }
@@ -305,7 +302,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ07 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q07:{s7Client.ErrorText(writeQ07)}");
 #endif
                     if (writeQ07 != 0) { idle = true; return; }
@@ -316,7 +313,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ07 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 2, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q07:{s7Client.ErrorText(writeQ07)}");
 #endif
                     if (writeQ07 != 0) { idle = true; return; }
@@ -330,7 +327,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ10 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q10:{s7Client.ErrorText(writeQ10)}");
 #endif
                     if (writeQ10 != 0) { idle = true; return; }
@@ -342,7 +339,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ10 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 3, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q10:{s7Client.ErrorText(writeQ10)}");
 #endif
                     if (writeQ10 != 0) { idle = true; return; }
@@ -355,7 +352,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ20 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 4, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q20:{s7Client.ErrorText(writeQ20)}");
 #endif
                     if (writeQ20 != 0) { idle = true; return; }
@@ -366,7 +363,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ20 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 4, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q20:{s7Client.ErrorText(writeQ20)}");
 #endif
                     if (writeQ20 != 0) { idle = true; return; }
@@ -379,7 +376,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ21 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q21:{s7Client.ErrorText(writeQ21)}");
 #endif
                     if (writeQ21 != 0) { idle = true; return; }
@@ -390,7 +387,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ21 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q21:{s7Client.ErrorText(writeQ21)}");
 #endif
                     if (writeQ21 != 0) { idle = true; return; }
@@ -403,7 +400,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q22:{s7Client.ErrorText(writeQ22)}");
 #endif
                     if (writeQ22 != 0) { idle = true; return; }
@@ -414,7 +411,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ22 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 2 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q22:{s7Client.ErrorText(writeQ22)}");
 #endif
                     if (writeQ22 != 0) { idle = true; return; }
@@ -427,7 +424,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ30 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 5, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q30:{s7Client.ErrorText(writeQ30)}");
 #endif
                     if (writeQ30 != 0) { idle = true; return; }
@@ -438,7 +435,7 @@ namespace s7dotnet {
                     while (idle == false) ;
                     idle = false;
                     int writeQ30 = s7Client.WriteArea(S7Client.S7AreaPA, 0, 0 * 8 + 5, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write Q30:{s7Client.ErrorText(writeQ30)}");
 #endif
                     if (writeQ30 != 0) { idle = true; return; }
@@ -447,36 +444,22 @@ namespace s7dotnet {
                 break;
                 case "btn_manual":
                 if (btn_manual.IsOn) {
-                    //S7.SetBitAt(ref wManual, 0, 0, true);
-                    //S7.SetBitAt(ref wStop, 0, 0, true);
                     while (idle == false) ;
                     idle = false;
                     int writeManual = s7Client.WriteArea(S7Client.S7AreaMK, 0, 200 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write M200.1:{s7Client.ErrorText(writeManual)}");
 #endif
                     if (writeManual != 0) { idle = true; return; }
-                    int writeStop = s7Client.WriteArea(S7Client.S7AreaMK, 0, 200 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 0 });
-#if debug
-                    Console.WriteLine($"Write M200.1:{s7Client.ErrorText(writeStop)}");
-#endif
-                    if (writeStop != 0) { idle = true; return; }
                     idle = true;
                 }
                 else {
-                    //S7.SetBitAt(ref wManual, 0, 0, false);
-                    //S7.SetBitAt(ref wStop, 0, 0, false);
                     while (idle == false) ;
                     int writeManual = s7Client.WriteArea(S7Client.S7AreaMK, 0, 200 * 8 + 1, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
+#if DEBUG
                     Console.WriteLine($"Write M200.1:{s7Client.ErrorText(writeManual)}");
 #endif
                     if (writeManual != 0) { idle = true; return; }
-                    int writeStop = s7Client.WriteArea(S7Client.S7AreaMK, 0, 200 * 8 + 0, 1, S7Client.S7WLBit, new byte[] { 1 });
-#if debug
-                    Console.WriteLine($"Write M200.1:{s7Client.ErrorText(writeStop)}");
-#endif
-                    if (writeStop != 0) { idle = true; return; }
                     idle = true;
                 }
                 break;
