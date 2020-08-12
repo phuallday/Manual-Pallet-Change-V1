@@ -107,7 +107,7 @@ namespace s7dotnet {
                     if (S7.GetBitAt(buffer_Memory, 0, 3)) { //m200.3
                         using (OleDbConnection connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["192.168.100.100"].ConnectionString)) {
                             using (OleDbDataAdapter dataAdapter = new OleDbDataAdapter()) {
-                                OleDbCommand command = new OleDbCommand($"UPDATE [OST].[dbo].[Assy_Stage] SET [ID] = '1' WHERE [Machine] = '{ConfigurationManager.AppSettings["Machine"]}'", connection);
+                                OleDbCommand command = new OleDbCommand($"UPDATE [OST].[dbo].[Assy_Stage] SET [PROCESS] = '1' WHERE [Machine] = '{ConfigurationManager.AppSettings["Machine"]}'", connection);
                                 connection.Open();
                                 dataAdapter.UpdateCommand = command;
                                 dataAdapter.UpdateCommand.ExecuteNonQuery();
@@ -120,17 +120,17 @@ namespace s7dotnet {
 #endif
                         if (writeM2003 != 0) goto Connect;
                     }
-                    else {
-                        using (OleDbConnection connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["192.168.100.100"].ConnectionString)) {
-                            using (OleDbDataAdapter dataAdapter = new OleDbDataAdapter()) {
-                                OleDbCommand command = new OleDbCommand($"UPDATE [OST].[dbo].[Assy_Stage] SET [ID] = '0' WHERE [Machine] = '{ConfigurationManager.AppSettings["Machine"]}'", connection);
-                                connection.Open();
-                                dataAdapter.UpdateCommand = command;
-                                dataAdapter.UpdateCommand.ExecuteNonQuery();
-                                connection.Close();
-                            }
-                        }
-                    }
+                    //else {
+                    //    using (OleDbConnection connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["192.168.100.100"].ConnectionString)) {
+                    //        using (OleDbDataAdapter dataAdapter = new OleDbDataAdapter()) {
+                    //            OleDbCommand command = new OleDbCommand($"UPDATE [OST].[dbo].[Assy_Stage] SET [ID] = '0' WHERE [Machine] = '{ConfigurationManager.AppSettings["Machine"]}'", connection);
+                    //            connection.Open();
+                    //            dataAdapter.UpdateCommand = command;
+                    //            dataAdapter.UpdateCommand.ExecuteNonQuery();
+                    //            connection.Close();
+                    //        }
+                    //    }
+                    //}
                     #endregion
                     #region [ReadSQL]
                     using (OleDbConnection connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["192.168.100.100"].ConnectionString)) {
