@@ -106,13 +106,29 @@
                       Margin="10,10,0,0"
                       VerticalAlignment="Top"
                       Width="153">
-                <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
-                                  x:Name="btn_manual"
-                                  Header="Auto/Manual"
-                                  OffContent="Auto"
-                                  OnContent="Manual"
-                                  VerticalAlignment="Top"
-                                  HorizontalAlignment="Left" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="tbl_modeStatus"
+                               Text="AUTO"
+                               TextAlignment="Center"
+                               VerticalAlignment="Center"
+                               Grid.Column="0"
+                               Padding="10" />
+                    <StackPanel Grid.Column="1"
+                                VerticalAlignment="Center">
+                        <Button x:Name="btn_autoMode"
+                                Content="AUTO"
+                                Margin="0,5,0,5"
+                                Click="btn_autoMode_Click" />
+                        <Button x:Name="btn_manualMode"
+                                Content="MANUAL"
+                                Margin="0,5,0,5"
+                                Click="btn_manualMode_Click" />
+                    </StackPanel>
+                </Grid>
             </GroupBox>
             <GroupBox x:Name="groupBox_InsideMC"
                       Header="GroupBox Inside MC"
@@ -121,24 +137,83 @@
                       Margin="10,119,0,0"
                       VerticalAlignment="Top"
                       Width="153">
-                <Grid>
-                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
-                                      x:Name="btn_pallet"
-                                      Header="PALLET"
-                                      OffContent="CLOSE"
-                                      OnContent="OPEN"
-                                      VerticalAlignment="Top"
-                                      HorizontalAlignment="Left" />
-                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
-                                      x:Name="btn_xilanh1"
-                                      Header="XI LANH 1"
-                                      OffContent="OFF"
-                                      OnContent="ON"
-                                      VerticalAlignment="Top"
-                                      HorizontalAlignment="Left"
-                                      Margin="0,59.62,0,0" />
+                <StackPanel>
+                    <StackPanel Margin="0,5,0,5"
+                                Orientation="Horizontal"
+                                Height="40">
+                        <Label Content="Pallet:"
+                               VerticalAlignment="Center" />
+                        <Button Content="OPEN"
+                                Width="40"
+                                x:Name="btn_plON"
+                                Click="btn_plON_Click" />
+                        <Button Content="CLOSE"
+                                Click="btn_plOFF_Click"
+                                Width="40"
+                                x:Name="btn_plOFF" />
+                        <Label Name="lb_plStatus"
+                               Background="Green"
+                               Margin="3,0,0,0"
+                               Width="15" />
+                    </StackPanel>
+                    <StackPanel Margin="0,5,0,5"
+                                Orientation="Horizontal"
+                                Height="40">
+                        <Label Content="XL1:   "
+                               VerticalAlignment="Center" />
+                        <Button Content="ON"
+                                Click="btn_xl1ON_Click"
+                                Width="40"
+                                x:Name="btn_xl1ON" />
+                        <Button  Content="OFF"
+                                 Click="btn_xl1OFF_Click"
+                                 Width="40"
+                                 x:Name="btn_xl1OFF" />
+                        <Label Name="lb_xl1Status"
+                               Width="15"
+                               Background="Green"
+                               Margin="3,0,0,0" />
+                    </StackPanel>
 
-                </Grid>
+                    <StackPanel Margin="0,5,0,5"
+                                Height="40"
+                                Orientation="Horizontal">
+                        <Label Content="XL3:   "
+                               VerticalAlignment="Center" />
+                        <Button Content="ON"
+                                Click="btn_xl3ON_Click"
+                                Width="40"
+                                x:Name="btn_xl3ON" />
+                        <Button Content="OFF"
+                                Click="btn_xl3OFF_Click"
+                                Width="40"
+                                x:Name="btn_xl3OFF" />
+                        <Label Name="lb_xl3Status"
+                               Width="15"
+                               Background="Green"
+                               Margin="3,0,0,0" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,5,0,5"
+                                Orientation="Horizontal"
+                                Height="40">
+                        <Label Content="XL4:   "
+                               VerticalAlignment="Center" />
+                        <Button x:Name="btn_xl4ON"
+                                Click="btn_xl4ON_Click"
+                                Content="ON"
+                                Width="40" />
+                        <Button x:Name="btn_xl4OFF"
+                                Click="btn_xl4OFF_Click"
+                                Content="OFF"
+                                Width="40" />
+                        <Label Name="lb_xl4Status"
+                               Background="Green"
+                               Margin="3,0,0,0"
+                               Width="15" />
+                    </StackPanel>
+
+                </StackPanel>
             </GroupBox>
             <GroupBox  x:Name="groupBox_Jig1"
                        Header="GroupBox jig1"
@@ -146,57 +221,91 @@
                        Height="279"
                        Margin="168,119,0,0"
                        VerticalAlignment="Top"
-                       Width="311">
-                <Grid>
-                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
-                                      x:Name="btn_xilanh4"
-                                      Header="XI LANH 4"
-                                      OffContent="OFF"
-                                      OnContent="ON"
-                                      VerticalAlignment="Top"
-                                      HorizontalAlignment="Left"
-                                      Margin="10,120,0,0" />
-                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
-                                      x:Name="btn_xilanh5"
-                                      Header="XI LANH 5"
-                                      OffContent="OFF"
-                                      OnContent="ON"
-                                      VerticalAlignment="Top"
-                                      HorizontalAlignment="Left"
-                                      Margin="147,4,0,0" />
-                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
-                                      x:Name="btn_xilanh6"
-                                      Header="XI LANH 6"
-                                      OffContent="OFF"
-                                      OnContent="ON"
-                                      VerticalAlignment="Top"
-                                      HorizontalAlignment="Left"
-                                      Margin="147,65,0,0" />
-                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
-                                      x:Name="btn_xilanh7"
-                                      Header="XI LANH 7"
-                                      OffContent="OFF"
-                                      OnContent="ON"
-                                      VerticalAlignment="Top"
-                                      HorizontalAlignment="Left"
-                                      Margin="147,124,0,0" />
-                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
-                                      x:Name="btn_xilanh2"
-                                      Header="XI LANH 2"
-                                      OffContent="OFF"
-                                      OnContent="ON"
-                                      VerticalAlignment="Top"
-                                      HorizontalAlignment="Left"
-                                      Margin="10,4,0,0" />
-                    <mah:ToggleSwitch PreviewMouseDown="btn_Toggled"
-                                      x:Name="btn_xilanh3"
-                                      Header="XI LANH 3"
-                                      OffContent="OFF"
-                                      OnContent="ON"
-                                      VerticalAlignment="Top"
-                                      HorizontalAlignment="Left"
-                                      Margin="10,64,0,0" />
-                </Grid>
+                       Width="153">
+                <StackPanel>
+                    <StackPanel Margin="0,5,0,5"
+                                Orientation="Horizontal"
+                                Height="40">
+                        <Label Content="XL2:   "
+                               VerticalAlignment="Center" />
+                        <Button Content="ON"
+                                Click="btn_xl2ON_Click"
+                                Width="40"
+                                x:Name="btn_xl2ON" />
+                        <Button Content="OFF"
+                                Click="btn_xl2OFF_Click"
+                                Width="40"
+                                x:Name="btn_xl2OFF" />
+                        <Label Name="lb_xl2Status"
+                               Width="15"
+                               Background="Green"
+                               Margin="3,0,0,0" />
+                    </StackPanel>
+                    <StackPanel Margin="0,5,0,5"
+                                Orientation="Horizontal"
+                                Height="40">
+                        <Label Content="XL6:   "
+                               VerticalAlignment="Center" />
+                        <Button Content="ON"
+                                Click="btn_xl6ON_Click"
+                                Width="40"
+                                x:Name="btn_xl6ON" />
+                        <Button Content="OFF"
+                                Click="btn_xl6OFF_Click"
+                                Width="40"
+                                x:Name="btn_xl6OFF" />
+                        <Label Name="lb_xl6Status"
+                               Width="15"
+                               Background="Green"
+                               Margin="3,0,0,0" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox x:Name="groupBox_Jig2"
+                      Header="GroupBox jig2"
+                      HorizontalAlignment="Left"
+                      Height="279"
+                      Margin="326,119,0,0"
+                      VerticalAlignment="Top"
+                      Width="153">
+                <StackPanel>
+                    <StackPanel Margin="0,5,0,5"
+                                Orientation="Horizontal"
+                                Height="40">
+                        <Label Content="XL5:   "
+                               VerticalAlignment="Center" />
+                        <Button Content="ON"
+                                Click="btn_xl5ON_Click"
+                                Width="40"
+                                x:Name="btn_xl5ON" />
+                        <Button Content="OFF"
+                                Click="btn_xl5OFF_Click"
+                                Width="40"
+                                x:Name="btn_xl5OFF" />
+                        <Label Width="15"
+                               Background="Green"
+                               Margin="3,0,0,0"
+                               Name="lb_xl5Status" />
+                    </StackPanel>
+                    <StackPanel Margin="0,5,0,5"
+                                Height="40"
+                                Orientation="Horizontal">
+                        <Label Content="XL7:   "
+                               VerticalAlignment="Center" />
+                        <Button Content="ON"
+                                Click="btn_xl7ON_Click"
+                                Width="40"
+                                x:Name="btn_xl7ON" />
+                        <Button Content="OFF"
+                                Click="btn_xl7OFF_Click"
+                                Width="40"
+                                x:Name="btn_xl7OFF" />
+                        <Label Width="15"
+                               Background="Green"
+                               Margin="3,0,0,0"
+                               Name="lb_xl7Status" />
+                    </StackPanel>
+                </StackPanel>
             </GroupBox>
             <GroupBox x:Name="groupBox_Lamp"
                       Header="GroupBox lamp"
